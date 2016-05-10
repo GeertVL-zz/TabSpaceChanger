@@ -51,8 +51,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ChangeTabLength.cs" />
-    <Compile Include="ChangeTabLength4.cs" />
+    <Compile Include="Commands\ChangeTabLength.cs" />
+    <Compile Include="Commands\ChangeTabLength4.cs" />
     <Compile Include="ChangeTabLengthPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

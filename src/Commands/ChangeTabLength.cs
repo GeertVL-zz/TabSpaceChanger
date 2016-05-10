@@ -18,6 +18,8 @@ namespace TabSpaceChanger
   internal sealed class ChangeTabLength
   {
     private const string CollectionPath = @"Text Editor\CSharp";
+    private const string TabSize = "Tab Size";
+    private const string IndentSize = "Indent Size";
 
     /// <summary>
     /// Command ID.
@@ -95,14 +97,22 @@ namespace TabSpaceChanger
     /// <param name="e">Event args.</param>
     private void MenuItemCallback(object sender, EventArgs e)
     {
-      var settingsManager = new ShellSettingsManager(ServiceProvider);
-      var settingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
-      var tabSize = settingsStore.GetInt32(CollectionPath, "Tab Size", -1);
-      var indentSize = settingsStore.GetInt32(CollectionPath, "Indent Size", -1);
-      if (tabSize == -1 || indentSize == -1)
+      try
       {
-        settingsStore.SetInt32(CollectionPath, "Tab Size", 2);
-        settingsStore.SetInt32(CollectionPath, "Indent Size", 2);
+        var settingsManager = new ShellSettingsManager(ServiceProvider);
+        var settingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
+        if (settingsStore.PropertyExists(CollectionPath, TabSize))
+        {
+          settingsStore.SetUInt32(CollectionPath, TabSize, 2);
+        }
+        if (settingsStore.PropertyExists(CollectionPath, IndentSize))
+        {
+          settingsStore.SetUInt32(CollectionPath, IndentSize, 2);
+        }
+      }
+      catch
+      {
+        // ignore
       }
     }
   }
