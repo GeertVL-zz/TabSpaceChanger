@@ -6,6 +6,9 @@
 
 using System;
 using System.ComponentModel.Design;
+using EnvDTE;
+using EnvDTE80;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Settings;
@@ -36,6 +39,9 @@ namespace TabSpaceChanger
     /// </summary>
     private readonly Package package;
 
+
+    private DTE2 _dte2;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ChangeTabLength"/> class.
     /// Adds our command handlers for menu (commands must exist in the command table file)
@@ -57,6 +63,8 @@ namespace TabSpaceChanger
         var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
         commandService.AddCommand(menuItem);
       }
+
+      _dte2 = (DTE2) ServiceProvider.GetService(typeof (DTE));
     }
 
     /// <summary>
@@ -104,11 +112,14 @@ namespace TabSpaceChanger
         if (settingsStore.PropertyExists(CollectionPath, TabSize))
         {
           settingsStore.SetUInt32(CollectionPath, TabSize, 2);
+          _dte2.Properties["TextEditor", "CSharp"].Item("TabSize").Value = 2;
         }
         if (settingsStore.PropertyExists(CollectionPath, IndentSize))
         {
           settingsStore.SetUInt32(CollectionPath, IndentSize, 2);
+          _dte2.Properties["TextEditor", "CSharp"].Item("IndentSize").Value = 2;
         }
+        _dte2.Commands.Raise(VSConstants.CMDSETID.StandardCommandSet2K_string, (int)VSConstants.VSStd2KCmdID.FORMATDOCUMENT, null, null);
       }
       catch
       {
