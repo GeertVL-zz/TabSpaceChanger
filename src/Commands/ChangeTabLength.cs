@@ -40,7 +40,7 @@ namespace TabSpaceChanger
     private readonly Package package;
 
 
-    private DTE2 _dte2;
+    private readonly DTE2 _dte2;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChangeTabLength"/> class.
@@ -64,7 +64,7 @@ namespace TabSpaceChanger
         commandService.AddCommand(menuItem);
       }
 
-      _dte2 = (DTE2) ServiceProvider.GetService(typeof (DTE));
+      _dte2 = (DTE2)ServiceProvider.GetService(typeof(DTE));
     }
 
     /// <summary>
@@ -105,26 +105,9 @@ namespace TabSpaceChanger
     /// <param name="e">Event args.</param>
     private void MenuItemCallback(object sender, EventArgs e)
     {
-      try
-      {
-        var settingsManager = new ShellSettingsManager(ServiceProvider);
-        var settingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
-        if (settingsStore.PropertyExists(CollectionPath, TabSize))
-        {
-          settingsStore.SetUInt32(CollectionPath, TabSize, 2);
-          _dte2.Properties["TextEditor", "CSharp"].Item("TabSize").Value = 2;
-        }
-        if (settingsStore.PropertyExists(CollectionPath, IndentSize))
-        {
-          settingsStore.SetUInt32(CollectionPath, IndentSize, 2);
-          _dte2.Properties["TextEditor", "CSharp"].Item("IndentSize").Value = 2;
-        }
-        _dte2.Commands.Raise(VSConstants.CMDSETID.StandardCommandSet2K_string, (int)VSConstants.VSStd2KCmdID.FORMATDOCUMENT, null, null);
-      }
-      catch
-      {
-        // ignore
-      }
+      _dte2.Properties["TextEditor", "CSharp"].Item("TabSize").Value = 2;
+      _dte2.Properties["TextEditor", "CSharp"].Item("IndentSize").Value = 2;
+      _dte2.Commands.Raise(VSConstants.CMDSETID.StandardCommandSet2K_string, (int)VSConstants.VSStd2KCmdID.FORMATDOCUMENT, null, null);
     }
   }
 }
